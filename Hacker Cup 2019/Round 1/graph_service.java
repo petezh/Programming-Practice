@@ -2,8 +2,8 @@ import java.util.*;
 
 public class graph_service {
 
-	static int n;
-	static int m;
+	static int N;
+	static int M;
 
 	public static void main(String[] args) {
 
@@ -16,39 +16,39 @@ public class graph_service {
 			M = reader.nextInt();
 
 			// try to use only the required edges
-			String answer = m;
+			String answer = Integer.toString(M);
 			WeightedGraph g = new WeightedGraph();
 
-			for (int j = 0; j < m; j++) {
+			for (int j = 0; j < M; j++) {
 
 				int X = reader.nextInt();
 				int Y = reader.nextInt();
 				int weight = reader.nextInt();
-				
+
 				g.addEdge(X, Y, weight);
 
-				answer += "\n" + X + " " + X + " " + weight + ;
+				answer += "\n" + X + " " + X + " " + weight;
 			}
 
 			// test if all edges are consistent
-			boolean consistent == true;
+			boolean consistent = true;
 			for(Edge e : g.edges) {
-				consistent &= g.dijkstra(e.source,e.destination) != e.weight
+				consistent &= g.dijkstra(e.start,e.end) == e.weight;
 				if(!consistent)
 					break;
 			}
-			
+
 			if(consistent)
-				System.out.println("Case #" + i + ": " + answer)
+				System.out.println("Case #" + i + ": " + answer);
 			else
 				System.out.println("Case #" + i + ": " + "Impossible");
-			
+
 		}
 	}
 
 	// edge class
 	static class Edge implements Comparable<Edge> {
-		
+
 		int start;
 		int end;
 		int weight;
@@ -68,7 +68,7 @@ public class graph_service {
 	// weighted graph class
 	static class WeightedGraph {
 
-		public ArrayList<Edge> edges = new ArrayList<Edge>(m);
+		public ArrayList<Edge> edges = new ArrayList<Edge>(M);
 
 		public void addEdge(int start, int end, int weight) {
 			edges.add(new Edge(start, end, weight));
@@ -77,9 +77,9 @@ public class graph_service {
 
 		public int dijkstra(int start, int dest) {
 
-			int[] distance = new int[n+1];
+			int[] distance = new int[N+1];
 
-			for (int i = 1; i <= n; i++) {
+			for (int i = 1; i <= N; i++) {
 				distance[i] = Integer.MAX_VALUE - 1;
 			}
 
@@ -88,7 +88,7 @@ public class graph_service {
 			Set<Integer> visited = new TreeSet<Integer>();
 			Set<Integer> unvisited = new TreeSet<Integer>();
 
-			for (int i = 1; i <= n; i++) {
+			for (int i = 1; i <= N; i++) {
 				unvisited.add(i);
 			}
 
@@ -97,7 +97,7 @@ public class graph_service {
 			do {
 				ArrayList<Integer[]> neighbors = neighbors(current, unvisited);
 
-				for (ArrayList<Integer> a : neighbors) {
+				for (Integer[] a : neighbors) {
 
 					for (Edge e : edges) {
 						if (e.start == current && e.end == a[0]) {
@@ -130,13 +130,13 @@ public class graph_service {
 			return distance[dest];
 		}
 
-		public ArrayList<ArrayList<Integer>> neighbors(int a, Set<Integer> unvisited) {
+		public ArrayList<Integer[]> neighbors(int a, Set<Integer> unvisited) {
 
 			ArrayList<Integer[]> toRet = new ArrayList<Integer[]>();
 
 			for (Edge e : edges)
 				if (e.start == a && unvisited.contains(e.end)) {
-					b = new int[2];
+					Integer[] b = new Integer[2];
 					b[0] = e.end;
 					b[1] = e.weight;
 					toRet.add(b);
